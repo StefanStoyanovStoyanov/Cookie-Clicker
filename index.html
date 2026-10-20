@@ -34,18 +34,23 @@
     <div id="counter">Total Clicks: 0</div>
     <img src="cookie.png" id="cookie" alt="Cookie">
 
-    <script src="/socket.io/socket.io.js"></script>
     <script>
-        const socket = io();
+        const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const socket = new WebSocket(`${protocol}//${location.host}/ws`);
         const cookie = document.getElementById('cookie');
         const counter = document.getElementById('counter');
 
         cookie.addEventListener('click', () => {
-            socket.emit('cookieClick');
+            if (socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({ event: 'cookieClick' }));
+            }
         });
 
-        socket.on('updateCount', (count) => {
-            counter.textContent = `Total Clicks: ${count}`;
+        socket.addEventListener('message', (message) => {
+            const data = JSON.parse(message.data);
+            if (data.event === 'updateCount') {
+                counter.textContent = `Total Clicks: ${data.count}`;
+            }
         });
     </script>
 </body>
