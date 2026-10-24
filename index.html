@@ -1,57 +1,57 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multiplayer Cookie Clicker</title>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-        }
-        #cookie {
-            cursor: pointer;
-            transition: transform 0.1s;
-            width: 200px;
-            height: 200px;
-        }
-        #cookie:active {
-            transform: scale(0.95);
-        }
-        #counter {
-            font-size: 2em;
-            margin: 20px 0;
-        }
-    </style>
-</head>
-<body>
-    <div id="counter">Total Clicks: 0</div>
-    <img src="cookie.png" id="cookie" alt="Cookie">
-
-    <script>
-        const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const socket = new WebSocket(`${protocol}//${location.host}/ws`);
-        const cookie = document.getElementById('cookie');
-        const counter = document.getElementById('counter');
-
-        cookie.addEventListener('click', () => {
-            if (socket.readyState === WebSocket.OPEN) {
-                socket.send(JSON.stringify({ event: 'cookieClick' }));
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Cookie Clicker Multiplayer</title>
+        <style>
+            body {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+                margin: 0;
+                background-color: #f0f0f0;
+                font-family: Arial, sans-serif;
             }
-        });
-
-        socket.addEventListener('message', (message) => {
-            const data = JSON.parse(message.data);
-            if (data.event === 'updateCount') {
-                counter.textContent = `Total Clicks: ${data.count}`;
+            #cookie {
+                cursor: pointer;
+                transition: transform 0.1s;
+                width: 200px;
+                height: 200px;
             }
-        });
-    </script>
-</body>
+            #cookie:active {
+                transform: scale(0.95);
+            }
+            #counter {
+                font-size: 2em;
+                margin: 20px 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="counter">Total Clicks: 0</div>
+        <img src="cookie.png" id="cookie" alt="Cookie" />
+
+        <script>
+            const protocol = location.protocol === "https:" ? "wss:" : "ws:";
+            const socket = new WebSocket(`${protocol}//${location.host}/ws`);
+            const cookie = document.getElementById("cookie");
+            const counter = document.getElementById("counter");
+
+            cookie.addEventListener("click", () => {
+                if (socket.readyState === WebSocket.OPEN) {
+                    socket.send(JSON.stringify({ event: "cookieClick" }));
+                }
+            });
+
+            socket.addEventListener("message", (message) => {
+                const data = JSON.parse(message.data);
+                if (data.event === "updateCount") {
+                    counter.textContent = `Total Clicks: ${data.count}`;
+                }
+            });
+        </script>
+    </body>
 </html>

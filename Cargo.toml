@@ -1,7 +1,11 @@
 [package]
-name = "cookie-clicker"
+name = "cookie-clicker-multiplayer"
 version = "0.1.0"
 edition = "2024"
+
+[[bin]]
+name = "cookie-clicker-multiplayer"
+path = "src/server.rs"
 
 [dependencies]
 axum = { version = "0.8", features = ["ws"] }
